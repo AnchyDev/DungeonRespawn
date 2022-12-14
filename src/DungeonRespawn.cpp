@@ -29,6 +29,11 @@ bool DSPlayerScript::IsInsideDungeonRaid(Player* player)
 }
 void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
 {
+    if (!drEnabled)
+    {
+        return;
+    }
+
     if (!IsInsideDungeonRaid(player))
     {
         return;
@@ -47,6 +52,11 @@ void DSPlayerScript::ResurrectPlayer(Player* player)
 
 bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
 {
+    if (!drEnabled)
+    {
+        return true;
+    }
+
     if (!IsInsideDungeonRaid(player))
     {
         return true;
@@ -102,8 +112,13 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
     return true;
 }
 
-void DSWorldScript::OnAfterConfigLoad(bool /*reload*/)
+void DSWorldScript::OnAfterConfigLoad(bool reload)
 {
+    if (reload)
+    {
+        dungeons.clear();
+    }
+
     QueryResult result = WorldDatabase.Query("SELECT dungeonId, position_x, position_y, position_z, orientation FROM lfg_dungeon_template");
 
     if (!result)
@@ -124,6 +139,8 @@ void DSWorldScript::OnAfterConfigLoad(bool /*reload*/)
 
         dungeons.push_back(dungeon);
     } while (result->NextRow());
+
+    drEnabled = sConfigMgr->GetOption<bool>("DungeonRespawn.Enable", false);
 }
 
 void SC_AddDungeonRespawnScripts()

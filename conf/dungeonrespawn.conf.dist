@@ -5,13 +5,13 @@
 [worldserver]
 
 ########################################
-# My module configuration
+# Dungeon Respawn configuration
 ########################################
 #
-#    MyModule.Enable
-#        Description: Enable my module and print "Hello World" message at server start
+#    DungeonRespawn.Enable
+#        Description: Enables the Dungeon Respawn module.
 #        Default:     0 - Disabled
 #                     1 - Enabled
 #
 
-MyModule.Enable = 0
+DungeonRespawn.Enable = 0
