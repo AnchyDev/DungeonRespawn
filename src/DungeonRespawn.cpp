@@ -38,16 +38,20 @@ void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
 
 bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
 {
-    AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
-
-    if (at)
+    auto elementIndex = std::find(playersToTeleport.begin(), playersToTeleport.end(), player->GetGUID());
+    if (elementIndex != playersToTeleport.end())
     {
-        player->ResurrectPlayer(1.0, false);
-        player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
+        AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
 
-        return false;
+        if (at)
+        {
+            player->ResurrectPlayer(1.0, false);
+            player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
+
+            return false;
+        }
     }
-
+    /*
     auto elementIndex = std::find(playersToTeleport.begin(), playersToTeleport.end(), player->GetGUID());
     if (elementIndex != playersToTeleport.end())
     {
@@ -66,7 +70,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
             player->TeleportTo(dungeonData.map, dungeonData.x, dungeonData.y, dungeonData.z, dungeonData.o);
         }
         return false;
-    }
+    }*/
     return true;
 }
 
