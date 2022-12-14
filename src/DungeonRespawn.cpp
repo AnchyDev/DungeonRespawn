@@ -90,13 +90,13 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
             player->ResurrectPlayer(1.0, false);
             LOG_INFO("module", "Resurrected player");
 
-            LOG_INFO("module", "Overriding teleport..");
-            player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
-            LOG_INFO("module", "Overrided teleport");
-
             LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
             playersToTeleport.erase(it);
             LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
+
+            LOG_INFO("module", "Overriding teleport..");
+            player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
+            LOG_INFO("module", "Overrided teleport");
 
             return false;
         }
