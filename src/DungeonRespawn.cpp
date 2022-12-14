@@ -59,7 +59,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
             continue;
         }
 
-        //Some maps have differen.t entrance locations, so we will fetch the LFG entrance.
+        //Some maps have different entrance locations, so we will fetch the LFG entrance.
         auto lfgDungeonEntry = GetLFGDungeon(player->GetMapId(), player->GetDifficulty(player->GetMap()->IsRaid()));
         if (lfgDungeonEntry)
         {
@@ -71,7 +71,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
 
             for (auto dIt = begin(dungeons); dIt != end(dungeons); ++dIt)
             {
-                if (dIt->map != lfgDungeonEntry->map)
+                if (dIt->map != lfgDungeonEntry->ID)
                 {
                     continue;
                 }
