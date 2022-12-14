@@ -74,8 +74,8 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
                     continue;
                 }
 
-                ResurrectPlayer(player);
                 player->TeleportTo(lfgDungeonEntry->map, dIt->x, dIt->y, dIt->z, dIt->o);
+                ResurrectPlayer(player);
 
                 return false;
             }
@@ -84,8 +84,8 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
         if (at)
         {
-            ResurrectPlayer(player);
             player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
+            ResurrectPlayer(player);
 
             return false;
         }
