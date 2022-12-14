@@ -77,7 +77,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
                 }
 
                 LOG_INFO("module", "Overriding teleport..");
-                player->TeleportTo(dIt->map, dIt->x, dIt->y, dIt->z, dIt->o);
+                player->TeleportTo(lfgDungeonEntry->map, dIt->x, dIt->y, dIt->z, dIt->o);
                 LOG_INFO("module", "Overrided teleport");
             }
             return false;
