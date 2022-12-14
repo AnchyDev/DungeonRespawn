@@ -1,29 +1,41 @@
-/*
- * Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license: https://github.com/azerothcore/azerothcore-wotlk/blob/master/LICENSE-AGPL3
- */
+#include "DungeonRespawn.h"
 
-#include "ScriptMgr.h"
-#include "Player.h"
-#include "Config.h"
-#include "Chat.h"
-
-// Add player scripts
-class MyPlayer : public PlayerScript
+void DSUnitScript::OnUnitDeath(Unit* unit, Unit* /*killer*/)
 {
-public:
-    MyPlayer() : PlayerScript("MyPlayer") { }
-
-    void OnLogin(Player* player) override
+    if (!unit)
     {
-        if (sConfigMgr->GetOption<bool>("MyModule.Enable", false))
-        {
-            ChatHandler(player->GetSession()).SendSysMessage("Hello World from Skeleton-Module!");
-        }
+        return;
     }
-};
 
-// Add all scripts in one
-void AddMyPlayerScripts()
+    Player* player = unit->ToPlayer();
+    if (!player)
+    {
+        return;
+    }
+
+
+    Map* map = player->GetMap();
+    if (!map)
+    {
+        return;
+    }
+
+    if (!map->IsDungeon() && !map->IsRaid())
+    {
+        return;
+    }
+
+    /*LFGDungeonEntry const* dungeon = GetLFGDungeon(map->GetId(), map->GetDifficulty());
+
+    if (!dungeon)
+    {
+        return;
+    }*/
+
+    player->TeleportToEntryPoint();
+}
+
+void SC_AddDungeonRespawnScripts()
 {
-    new MyPlayer();
+    new DSUnitScript();
 }
