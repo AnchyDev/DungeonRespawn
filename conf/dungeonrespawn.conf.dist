@@ -29,7 +29,7 @@ DungeonRespawn.RespawnHealthPct = 50.0
 #    DungeonRespawn.DurabilityLossPct
 #        Description: The amount of durability in % to lose when you die.
 #        Range:       0.0 - 100.0
-#        Default:     100.0
+#        Default:     10.0
 #
 
-DungeonRespawn.DurabilityLossPct = 25.0
+DungeonRespawn.DurabilityLossPct = 10.0
