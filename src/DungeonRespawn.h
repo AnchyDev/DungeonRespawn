@@ -7,6 +7,7 @@
 #include "Config.h"
 #include "Chat.h"
 #include <vector>
+#include "TaskScheduler.h"
 
 struct DungeonData
 {
@@ -29,6 +30,7 @@ public:
 
 private:
     std::vector<ObjectGuid> playersToTeleport;
+    TaskScheduler taskScheduler;
     bool IsInsideDungeonRaid(Player* /*player*/);
     void ResurrectPlayer(Player* /*player*/);
     void OnPlayerReleasedGhost(Player* /*player*/) override;
