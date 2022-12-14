@@ -38,11 +38,13 @@ void DSUnitScript::OnUnitDeath(Unit* unit, Unit* /*killer*/)
 
 void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
 {
+    LOG_INFO("module", "Test1");
     player->ResurrectPlayer(1.0, false);
 }
 
 bool DSPlayerScript::OnBeforeTeleport(Player* /*player*/, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
 {
+    LOG_INFO("module", "Test2");
     return true;
 }
 
