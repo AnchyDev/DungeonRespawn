@@ -5,15 +5,7 @@
 #include "Player.h"
 #include "Config.h"
 #include "Chat.h"
-
-class DSUnitScript : public UnitScript
-{
-public:
-    DSUnitScript() : UnitScript("DSUnitScript") { }
-
-private:
-    void OnUnitDeath(Unit* /*unit*/, Unit* /*killer*/) override;
-};
+#include <vector>
 
 class DSPlayerScript : public PlayerScript
 {
@@ -21,6 +13,7 @@ public:
     DSPlayerScript() : PlayerScript("DSPlayerScript") { }
 
 private:
+    std::vector<ObjectGuid> playersToTeleport;
     void OnPlayerReleasedGhost(Player* /*player*/) override;
     bool OnBeforeTeleport(Player* /*player*/, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/) override;
 };
