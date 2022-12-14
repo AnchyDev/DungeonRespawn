@@ -32,13 +32,35 @@
 
 void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
 {
-    playersToTeleport.push_back(player->GetGUID());
-    LOG_INFO("module", "Test1");
+    //playersToTeleport.push_back(player->GetGUID());
+    //LOG_INFO("module", "Test1");
+    if (!player)
+    {
+        LOG_INFO("module", "Failed to find player when releasing..");
+        return;
+    }
+
+    Map* map = player->GetMap();
+    if (!map)
+    {
+        LOG_INFO("module", "Failed to find map for player {}", player->GetPlayerName());
+        return;
+    }
+
+    LOG_INFO("module", "Found map {} for player {}", map->GetId(), player->GetPlayerName());
+
+    if (!map->IsDungeon() && !map->IsRaid())
+    {
+        LOG_INFO("module", "Not a dungeon/raid.");
+        return;
+    }
+
+    LOG_INFO("module", "Player is inside dungeon/raid.");
 }
 
 bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
 {
-    auto elementIndex = std::find(playersToTeleport.begin(), playersToTeleport.end(), player->GetGUID());
+    /*auto elementIndex = std::find(playersToTeleport.begin(), playersToTeleport.end(), player->GetGUID());
     if (elementIndex != playersToTeleport.end())
     {
         AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
@@ -50,7 +72,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
 
             return false;
         }
-    }
+    }*/
     /*
     auto elementIndex = std::find(playersToTeleport.begin(), playersToTeleport.end(), player->GetGUID());
     if (elementIndex != playersToTeleport.end())
