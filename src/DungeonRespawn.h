@@ -19,6 +19,8 @@ struct DungeonData
 
 std::vector<DungeonData> dungeons;
 
+bool isEnabled;
+
 class DSPlayerScript : public PlayerScript
 {
 public:

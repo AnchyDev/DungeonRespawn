@@ -59,15 +59,15 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
             continue;
         }
 
+        LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
+        playersToTeleport.erase(it);
+        LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
+
         //Some maps have different entrance locations, so we will fetch the LFG entrance.
         auto lfgDungeonEntry = GetLFGDungeon(player->GetMapId(), player->GetDifficulty(player->GetMap()->IsRaid()));
         if (lfgDungeonEntry)
         {
             ResurrectPlayer(player);
-
-            LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
-            playersToTeleport.erase(it);
-            LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
 
             for (auto dIt = begin(dungeons); dIt != end(dungeons); ++dIt)
             {
@@ -90,10 +90,6 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
             LOG_INFO("module", "Found area trigger mapid {}", at->target_mapId);
 
             ResurrectPlayer(player);
-
-            LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
-            playersToTeleport.erase(it);
-            LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
 
             LOG_INFO("module", "Overriding teleport..");
             player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
