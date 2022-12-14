@@ -4,26 +4,20 @@ bool DSPlayerScript::IsInsideDungeonRaid(Player* player)
 {
     if (!player)
     {
-        LOG_INFO("module", "Failed to find player when releasing..");
         return false;
     }
 
     Map* map = player->GetMap();
     if (!map)
     {
-        LOG_INFO("module", "Failed to find map for player {}", player->GetName());
         return false;
     }
-
-    LOG_INFO("module", "Found map {} for player {}", map->GetId(), player->GetName());
 
     if (!map->IsDungeon() && !map->IsRaid())
     {
-        LOG_INFO("module", "Not a dungeon/raid.");
         return false;
     }
 
-    LOG_INFO("module", "Player is inside dungeon/raid.");
 
     return true;
 }
@@ -44,10 +38,8 @@ void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
 
 void DSPlayerScript::ResurrectPlayer(Player* player)
 {
-    LOG_INFO("module", "Resurrecting player..");
     player->ResurrectPlayer(1.0, false);
     player->SpawnCorpseBones();
-    LOG_INFO("module", "Resurrected player");
 }
 
 bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
@@ -69,9 +61,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
             continue;
         }
 
-        LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
         playersToTeleport.erase(it);
-        LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
 
         //Some maps have different entrance locations, so we will fetch the LFG entrance.
         auto lfgDungeonEntry = GetLFGDungeon(player->GetMapId(), player->GetDifficulty(player->GetMap()->IsRaid()));
@@ -86,9 +76,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
                     continue;
                 }
 
-                LOG_INFO("module", "Overriding teleport..");
                 player->TeleportTo(lfgDungeonEntry->map, dIt->x, dIt->y, dIt->z, dIt->o);
-                LOG_INFO("module", "Overrided teleport");
 
                 return false;
             }
@@ -97,13 +85,9 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
         if (at)
         {
-            LOG_INFO("module", "Found area trigger mapid {}", at->target_mapId);
-
             ResurrectPlayer(player);
 
-            LOG_INFO("module", "Overriding teleport..");
             player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
-            LOG_INFO("module", "Overrided teleport");
 
             return false;
         }
