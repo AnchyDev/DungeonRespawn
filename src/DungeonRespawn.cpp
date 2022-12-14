@@ -44,4 +44,5 @@ void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
 void SC_AddDungeonRespawnScripts()
 {
     new DSUnitScript();
+    new DSPlayerScript();
 }

@@ -22,6 +22,7 @@ public:
 
 private:
     void OnPlayerReleasedGhost(Player* /*player*/) override;
+    bool OnBeforeTeleport(Player* /*player*/, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/) override;
 };
 
 #endif //MODULE_DUNGEONRESPAWN_H
