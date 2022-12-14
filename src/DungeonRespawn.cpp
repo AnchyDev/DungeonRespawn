@@ -75,7 +75,10 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
                 }
 
                 player->TeleportTo(lfgDungeonEntry->map, dIt->x, dIt->y, dIt->z, dIt->o);
-                ResurrectPlayer(player);
+                _scheduler.Schedule(1s, [this, player](TaskContext context)
+                    {
+                        ResurrectPlayer(player);
+                    });
 
                 return false;
             }
@@ -85,7 +88,10 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         if (at)
         {
             player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
-            ResurrectPlayer(player);
+            _scheduler.Schedule(1s, [this, player](TaskContext context)
+                {
+                    ResurrectPlayer(player);
+                });
 
             return false;
         }
