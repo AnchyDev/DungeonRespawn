@@ -1,25 +1,19 @@
-# SKELETON - Module template
+# ![logo](https://camo.githubusercontent.com/e4f036844d45424178f34d39dc3b0d52fdb82c07c5ef3c2aeb7e3da22c1538b3/68747470733a2f2f692e696d6775722e636f6d2f66517762386d332e706e67)Dungeon Respawn
 
-[English](README.md) | [Español](README_ES.md)
+## About
 
+This module will teleport the player to the start of the dungeon on death.
 
-## How to create your own module
+## Install
 
-1. Use the script `create_module.sh` located in [`modules/`](https://github.com/azerothcore/azerothcore-wotlk/tree/master/modules) to start quickly with all the files you need and your git repo configured correctly (heavily recommended).
-1. You can then use these scripts to start your project: https://github.com/azerothcore/azerothcore-boilerplates
-1. Do not hesitate to compare with some of our newer/bigger/famous modules.
-1. Edit the `README.md` and other files (`include.sh` etc...) to fit your module. Note: the README is automatically created from `README_example.md` when you use the script `create_module.sh`.
-1. Publish your module to our [catalogue](https://github.com/azerothcore/modules-catalogue).
+Just clone the module into your modules directory for your server, re-run cmake and compile.
 
+Then enable the module in the module config.
 
-## How to test your module?
+## Contact
 
-Disable PCH (precompiled headers) and try to compile. To disable PCH, set `-DNOPCH=1` with Cmake (more info [here](http://www.azerothcore.org/wiki/CMake-options)).
+If you need any help you can join my [Discord Server](https://discord.gg/xdVPGcpJ8C).
 
-If you forgot some headers, it is time to add them!
+## Credits
 
-## Licensing
-
-The default license of the skeleton-module template is the MIT but you can use a different license for your own modules.
-
-So modules can also be kept private. However, if you need to add new hooks to the core, as well as improving existing ones, you have to share your improvements because the main core is released under the AGPL license. Please [provide a PR](https://www.azerothcore.org/wiki/How-to-create-a-PR) if that is the case.
+Thanks to Артём Борисов_99 from the AzerothCore Discord for the module suggestion.
