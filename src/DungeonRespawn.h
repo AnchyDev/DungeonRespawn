@@ -21,7 +21,6 @@ std::vector<DungeonData> dungeons;
 
 bool drEnabled;
 float respawnHpPct;
-float duraLossPct;
 
 class DSPlayerScript : public PlayerScript
 {
