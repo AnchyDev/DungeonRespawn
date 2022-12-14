@@ -45,7 +45,10 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         player->ResurrectPlayer(1.0, false);
         playersToTeleport.erase(elementIndex);
 
-        auto dungeonIndex = std::find(dungeons.begin(), dungeons.end(), player->GetMapId());
+        auto dungeonIndex = std::find_if(dungeons.begin(), dungeons.end(), [player](DungeonData dData)
+        {
+                return dData.map == player->GetMapId();
+        });
         if (dungeonIndex != dungeons.end())
         {
             auto dungeonData = dungeons.at(std::distance(dungeons.begin(), dungeonIndex));
