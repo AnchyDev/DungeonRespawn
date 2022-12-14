@@ -38,8 +38,9 @@ void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
 
 void DSPlayerScript::ResurrectPlayer(Player* player)
 {
-    player->ResurrectPlayer(1.0, false);
+    player->ResurrectPlayer(respawnHpPct / 100.0f, false);
     player->SpawnCorpseBones();
+    player->DurabilityLossAll(duraLossPct / 100.0f, true);
 }
 
 bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
@@ -125,6 +126,8 @@ void DSWorldScript::OnAfterConfigLoad(bool reload)
     } while (result->NextRow());
 
     drEnabled = sConfigMgr->GetOption<bool>("DungeonRespawn.Enable", false);
+    respawnHpPct = sConfigMgr->GetOption<float>("DungeonRespawn.RespawnHealthPct", 50.0f);
+    duraLossPct = sConfigMgr->GetOption<float>("DungeonRespawn.DurabilityLossPct", 25.0f);
 }
 
 void SC_AddDungeonRespawnScripts()

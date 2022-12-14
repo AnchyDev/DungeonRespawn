@@ -15,3 +15,21 @@
 #
 
 DungeonRespawn.Enable = 0
+
+#
+#    DungeonRespawn.RespawnHealthPct
+#        Description: The amount of health in % to respawn with.
+#        Range:       0.0 - 100.0
+#        Default:     100.0
+#
+
+DungeonRespawn.RespawnHealthPct = 50.0
+
+#
+#    DungeonRespawn.DurabilityLossPct
+#        Description: The amount of durability in % to lose when you die.
+#        Range:       0.0 - 100.0
+#        Default:     100.0
+#
+
+DungeonRespawn.DurabilityLossPct = 25.0
