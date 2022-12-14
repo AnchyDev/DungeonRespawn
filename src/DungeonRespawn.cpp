@@ -1,35 +1,5 @@
 #include "DungeonRespawn.h"
 
-/*void DSUnitScript::OnUnitDeath()
-{
-    LOG_INFO("module", "1");
-    if (!unit)
-    {
-        return;
-    }
-    LOG_INFO("module", "2");
-    Player* player = unit->ToPlayer();
-    if (!player)
-    {
-        return;
-    }
-
-    LOG_INFO("module", "3");
-    Map* map = player->GetMap();
-    if (!map)
-    {
-        return;
-    }
-    LOG_INFO("module", "4");
-    if (!map->IsDungeon() && !map->IsRaid())
-    {
-        return;
-    }
-    LOG_INFO("module", "5");
-
-    //player->TeleportToEntryPoint();
-}*/
-
 bool DSPlayerScript::IsInsideDungeonRaid(Player* player)
 {
     if (!player)
@@ -67,6 +37,14 @@ void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
     playersToTeleport.push_back(player->GetGUID());
 }
 
+void DSPlayerScript::ResurrectPlayer(Player* player)
+{
+    LOG_INFO("module", "Resurrecting player..");
+    player->ResurrectPlayer(1.0, false);
+    player->SpawnCorpseBones();
+    LOG_INFO("module", "Resurrected player");
+}
+
 bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
 {
     if (!IsInsideDungeonRaid(player))
@@ -81,15 +59,36 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
             continue;
         }
 
+        //Some maps have differen.t entrance locations, so we will fetch the LFG entrance.
+        auto lfgDungeonEntry = GetLFGDungeon(player->GetMapId(), player->GetDifficulty(player->GetMap()->IsRaid()));
+        if (lfgDungeonEntry)
+        {
+            ResurrectPlayer(player);
+
+            LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
+            playersToTeleport.erase(it);
+            LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
+
+            for (auto dIt = begin(dungeons); dIt != end(dungeons); ++dIt)
+            {
+                if (dIt->map != lfgDungeonEntry->map)
+                {
+                    continue;
+                }
+
+                LOG_INFO("module", "Overriding teleport..");
+                player->TeleportTo(dIt->map, dIt->x, dIt->y, dIt->z, dIt>o);
+                LOG_INFO("module", "Overrided teleport");
+            }
+            return false;
+        }
+
         AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
         if (at)
         {
             LOG_INFO("module", "Found area trigger mapid {}", at->target_mapId);
 
-            LOG_INFO("module", "Resurrecting player..");
-            player->ResurrectPlayer(1.0, false);
-            player->SpawnCorpseBones();
-            LOG_INFO("module", "Resurrected player");
+            ResurrectPlayer(player);
 
             LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
             playersToTeleport.erase(it);
