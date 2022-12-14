@@ -26,6 +26,7 @@ public:
 
 private:
     std::vector<ObjectGuid> playersToTeleport;
+    bool IsInsideDungeonRaid(Player* /*player*/);
     void OnPlayerReleasedGhost(Player* /*player*/) override;
     bool OnBeforeTeleport(Player* /*player*/, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/) override;
 };

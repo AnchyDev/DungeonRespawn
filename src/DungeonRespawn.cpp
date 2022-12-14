@@ -30,36 +30,56 @@
     //player->TeleportToEntryPoint();
 }*/
 
-void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
+bool DSPlayerScript::IsInsideDungeonRaid(Player* player)
 {
-    //playersToTeleport.push_back(player->GetGUID());
-    //LOG_INFO("module", "Test1");
     if (!player)
     {
         LOG_INFO("module", "Failed to find player when releasing..");
-        return;
+        return false;
     }
 
     Map* map = player->GetMap();
     if (!map)
     {
-        LOG_INFO("module", "Failed to find map for player {}", player->GetPlayerName());
-        return;
+        LOG_INFO("module", "Failed to find map for player {}", player->GetName());
+        return false;
     }
 
-    LOG_INFO("module", "Found map {} for player {}", map->GetId(), player->GetPlayerName());
+    LOG_INFO("module", "Found map {} for player {}", map->GetId(), player->GetName());
 
     if (!map->IsDungeon() && !map->IsRaid())
     {
         LOG_INFO("module", "Not a dungeon/raid.");
-        return;
+        return false;
     }
 
     LOG_INFO("module", "Player is inside dungeon/raid.");
+
+    return true;
+}
+void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
+{
+    if (!IsInsideDungeonRaid(player))
+    {
+        return;
+    }
+
+    playersToTeleport.push_back(player->GetGUID());
 }
 
 bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
 {
+    if (!IsInsideDungeonRaid(player))
+    {
+        return true;
+    }
+
+    AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
+    if (at)
+    {
+        LOG_INFO("module", "Found area trigger mapid {}", at->target_mapId);
+    }
+    
     /*auto elementIndex = std::find(playersToTeleport.begin(), playersToTeleport.end(), player->GetGUID());
     if (elementIndex != playersToTeleport.end())
     {
