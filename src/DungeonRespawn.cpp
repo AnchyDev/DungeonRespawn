@@ -68,8 +68,6 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         auto lfgDungeonEntry = GetLFGDungeon(player->GetMapId(), player->GetDifficulty(player->GetMap()->IsRaid()));
         if (lfgDungeonEntry)
         {
-            ResurrectPlayer(player);
-
             for (auto dIt = begin(dungeons); dIt != end(dungeons); ++dIt)
             {
                 if (dIt->map != lfgDungeonEntry->ID)
@@ -77,6 +75,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
                     continue;
                 }
 
+                ResurrectPlayer(player);
                 player->TeleportTo(lfgDungeonEntry->map, dIt->x, dIt->y, dIt->z, dIt->o);
 
                 return false;
@@ -87,7 +86,6 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         if (at)
         {
             ResurrectPlayer(player);
-
             player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
 
             return false;
