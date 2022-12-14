@@ -88,6 +88,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
 
             LOG_INFO("module", "Resurrecting player..");
             player->ResurrectPlayer(1.0, false);
+            player->SpawnCorpseBones();
             LOG_INFO("module", "Resurrected player");
 
             LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
