@@ -33,7 +33,12 @@ void DSUnitScript::OnUnitDeath(Unit* unit, Unit* /*killer*/)
         return;
     }*/
 
-    player->TeleportToEntryPoint();
+    //player->TeleportToEntryPoint();
+}
+
+void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
+{
+    player->ResurrectPlayer(1.0, false);
 }
 
 void SC_AddDungeonRespawnScripts()

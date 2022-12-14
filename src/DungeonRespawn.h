@@ -15,4 +15,13 @@ private:
     void OnUnitDeath(Unit* /*unit*/, Unit* /*killer*/) override;
 };
 
+class DSPlayerScript : public PlayerScript
+{
+public:
+    DSPlayerScript() : PlayerScript("DSPlayerScript") { }
+
+private:
+    void OnPlayerReleasedGhost(Player* /*player*/) override;
+};
+
 #endif //MODULE_DUNGEONRESPAWN_H
