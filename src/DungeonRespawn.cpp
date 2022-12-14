@@ -74,54 +74,34 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         return true;
     }
 
-    AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
-    if (at)
+    for (auto it = begin(playersToTeleport); it != end(playersToTeleport); ++it)
     {
-        LOG_INFO("module", "Found area trigger mapid {}", at->target_mapId);
+        if (player->GetGUID() != *it)
+        {
+            continue;
+        }
 
-        LOG_INFO("module", "Resurrecting player..");
-        player->ResurrectPlayer(1.0, false);
-        LOG_INFO("module", "Resurrected player");
-
-        LOG_INFO("module", "Overriding teleport..");
-        player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
-        LOG_INFO("module", "Overrided teleport");
-        return false;
-    }
-    
-    /*auto elementIndex = std::find(playersToTeleport.begin(), playersToTeleport.end(), player->GetGUID());
-    if (elementIndex != playersToTeleport.end())
-    {
         AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
-
         if (at)
         {
+            LOG_INFO("module", "Found area trigger mapid {}", at->target_mapId);
+
+            LOG_INFO("module", "Resurrecting player..");
             player->ResurrectPlayer(1.0, false);
+            LOG_INFO("module", "Resurrected player");
+
+            LOG_INFO("module", "Overriding teleport..");
             player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
+            LOG_INFO("module", "Overrided teleport");
+
+            LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
+            playersToTeleport.erase(it);
+            LOG_INFO("module", "VECOUNT: {}", playersToTeleport.size());
 
             return false;
         }
-    }*/
-    /*
-    auto elementIndex = std::find(playersToTeleport.begin(), playersToTeleport.end(), player->GetGUID());
-    if (elementIndex != playersToTeleport.end())
-    {
-        LOG_INFO("module", "Test2");
-        player->ResurrectPlayer(1.0, false);
-        playersToTeleport.erase(elementIndex);
+    }
 
-        auto dungeonIndex = std::find_if(dungeons.begin(), dungeons.end(), [player](DungeonData dData)
-        {
-                return dData.map == player->GetMapId();
-                
-        });
-        if (dungeonIndex != dungeons.end())
-        {
-            auto dungeonData = dungeons.at(std::distance(dungeons.begin(), dungeonIndex));
-            player->TeleportTo(dungeonData.map, dungeonData.x, dungeonData.y, dungeonData.z, dungeonData.o);
-        }
-        return false;
-    }*/
     return true;
 }
 
