@@ -41,6 +41,11 @@ void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
     player->ResurrectPlayer(1.0, false);
 }
 
+bool DSPlayerScript::OnBeforeTeleport(Player* /*player*/, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
+{
+    return true;
+}
+
 void SC_AddDungeonRespawnScripts()
 {
     new DSUnitScript();
