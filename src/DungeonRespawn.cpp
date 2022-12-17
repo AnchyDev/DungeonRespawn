@@ -67,7 +67,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         auto lfgDungeonEntry = GetLFGDungeon(player->GetMapId(), player->GetDifficulty(player->GetMap()->IsRaid()));
         if (lfgDungeonEntry)
         {
-            ChatHandler(player->GetSession()).SendSysMessage(Acore::StringFormatFmt("Found dungeon {}, {}", lfgDungeonEntry->ID, lfgDungeonEntry->name));
+            LOG_INFO("module", "Found dungeon {}, {}", lfgDungeonEntry->ID, lfgDungeonEntry->name[0]);
 
             for (auto dIt = begin(dungeons); dIt != end(dungeons); ++dIt)
             {
