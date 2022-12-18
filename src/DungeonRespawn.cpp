@@ -62,34 +62,41 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         }
 
         playersToTeleport.erase(it);
-
-        //Some maps have different entrance locations, so we will fetch the LFG entrance.
-        auto lfgDungeonEntry = GetLFGDungeon(player->GetMapId(), player->GetDifficulty(player->GetMap()->IsRaid()));
-        if (lfgDungeonEntry)
+        auto prData = GetRespawnData(player);
+        if (prData)
         {
-            LOG_INFO("module", "Found dungeon {}, {}", lfgDungeonEntry->ID, lfgDungeonEntry->name[0]);
-
-            for (auto dIt = begin(dungeons); dIt != end(dungeons); ++dIt)
+            player->TeleportTo(prData->dungeon.map, prData->dungeon.x, prData->dungeon.y, prData->dungeon.z, prData->dungeon.o);
+        }
+        else
+        {
+            //Some maps have different entrance locations, so we will fetch the LFG entrance.
+            auto lfgDungeonEntry = GetLFGDungeon(player->GetMapId(), player->GetDifficulty(player->GetMap()->IsRaid()));
+            if (lfgDungeonEntry)
             {
-                if (dIt->map != lfgDungeonEntry->ID)
-                {
-                    continue;
-                }
+                LOG_INFO("module", "Found dungeon {}, {}", lfgDungeonEntry->ID, lfgDungeonEntry->name[0]);
 
-                player->TeleportTo(lfgDungeonEntry->map, dIt->x, dIt->y, dIt->z, dIt->o);
+                for (auto dIt = begin(dungeons); dIt != end(dungeons); ++dIt)
+                {
+                    if (dIt->map != lfgDungeonEntry->ID)
+                    {
+                        continue;
+                    }
+
+                    player->TeleportTo(lfgDungeonEntry->map, dIt->x, dIt->y, dIt->z, dIt->o);
+                    ResurrectPlayer(player);
+
+                    return false;
+                }
+            }
+
+            AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
+            if (at)
+            {
+                player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
                 ResurrectPlayer(player);
 
                 return false;
             }
-        }
-
-        AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
-        if (at)
-        {
-            player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
-            ResurrectPlayer(player);
-
-            return false;
         }
     }
 
@@ -148,7 +155,30 @@ void DSPlayerScript::OnMapChanged(Player* player)
         return;
     }
 
-    LOG_INFO("module", "Entered map: {}", player->GetMapId());
+    if (!IsInsideDungeonRaid(player))
+    {
+        return;
+    }
+
+    auto prData = GetRespawnData(player);
+    if (!prData)
+    {
+        prData = new PlayerRespawnData();
+        prData->guid = player->GetGUID();
+        prData->dungeon.map = player->GetMapId();
+        prData->dungeon.x = player->GetPositionX();
+        prData->dungeon.y = player->GetPositionY();
+        prData->dungeon.z = player->GetPositionZ();
+        respawnData.push_back(*prData);
+    }
+    else
+    {
+        prData->guid = player->GetGUID();
+        prData->dungeon.map = player->GetMapId();
+        prData->dungeon.x = player->GetPositionX();
+        prData->dungeon.y = player->GetPositionY();
+        prData->dungeon.z = player->GetPositionZ();
+    }
 }
 
 void SC_AddDungeonRespawnScripts()
