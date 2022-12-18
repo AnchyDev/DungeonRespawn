@@ -60,6 +60,11 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
 
     for (auto it = begin(playersToTeleport); it != end(playersToTeleport); ++it)
     {
+        if (it == playersToTeleport.end())
+        {
+            break;
+        }
+
         if (player->GetGUID() != *it)
         {
             continue;
