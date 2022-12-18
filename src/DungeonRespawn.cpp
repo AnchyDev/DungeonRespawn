@@ -33,6 +33,8 @@ void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
         return;
     }
 
+    LOG_INFO("module", "Step 1");
+
     playersToTeleport.push_back(player->GetGUID());
 }
 
@@ -54,6 +56,8 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         return true;
     }
 
+    LOG_INFO("module", "Step 2");
+
     for (auto it = begin(playersToTeleport); it != end(playersToTeleport); ++it)
     {
         if (player->GetGUID() != *it)
@@ -61,11 +65,14 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
             continue;
         }
 
+        LOG_INFO("module", "Step 3");
+
         playersToTeleport.erase(it);
         auto prData = GetRespawnData(player);
         if (prData)
         {
             player->TeleportTo(prData->dungeon.map, prData->dungeon.x, prData->dungeon.y, prData->dungeon.z, prData->dungeon.o);
+            LOG_INFO("module", "Step 4");
         }
         else
         {
