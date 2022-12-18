@@ -23,7 +23,6 @@ struct PlayerRespawnData
     DungeonData dungeon;
 };
 
-std::vector<DungeonData> dungeons;
 std::vector<PlayerRespawnData> respawnData;
 
 bool drEnabled;
