@@ -17,7 +17,14 @@ struct DungeonData
     float o;
 };
 
+struct PlayerRespawnData
+{
+    ObjectGuid guid;
+    DungeonData dungeon;
+};
+
 std::vector<DungeonData> dungeons;
+std::vector<PlayerRespawnData> respawnData;
 
 bool drEnabled;
 float respawnHpPct;
@@ -31,8 +38,10 @@ private:
     std::vector<ObjectGuid> playersToTeleport;
     bool IsInsideDungeonRaid(Player* /*player*/);
     void ResurrectPlayer(Player* /*player*/);
+    PlayerRespawnData* GetRespawnData(Player* /*player*/);
     void OnPlayerReleasedGhost(Player* /*player*/) override;
     bool OnBeforeTeleport(Player* /*player*/, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/) override;
+    void OnMapChanged(Player* /*player*/) override;
 };
 
 class DSWorldScript : public WorldScript

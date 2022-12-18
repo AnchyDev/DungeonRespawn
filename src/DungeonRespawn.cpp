@@ -128,6 +128,29 @@ void DSWorldScript::OnAfterConfigLoad(bool reload)
     respawnHpPct = sConfigMgr->GetOption<float>("DungeonRespawn.RespawnHealthPct", 50.0f);
 }
 
+PlayerRespawnData* DSPlayerScript::GetRespawnData(Player* player)
+{
+    for (auto it = respawnData.begin(); it != respawnData.end(); ++it)
+    {
+        if (player->GetGUID() == it->guid)
+        {
+            return &(*it);
+        }
+    }
+
+    return 0;
+}
+
+void DSPlayerScript::OnMapChanged(Player* player)
+{
+    if (!player)
+    {
+        return;
+    }
+
+    LOG_INFO("module", "Entered map: {}", player->GetMapId());
+}
+
 void SC_AddDungeonRespawnScripts()
 {
     new DSWorldScript();
