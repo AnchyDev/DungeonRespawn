@@ -56,9 +56,14 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         return true;
     }
 
+    if (!player->isDead())
+    {
+        return true;
+    }
+
     LOG_INFO("module", "Step 2");
 
-    for (auto it = begin(playersToTeleport); it != end(playersToTeleport); ++it)
+    for (auto it = playersToTeleport.begin(); it != playersToTeleport.end(); ++it)
     {
         if (it == playersToTeleport.end())
         {
@@ -73,11 +78,12 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         LOG_INFO("module", "Step 3");
 
         playersToTeleport.erase(it);
+        LOG_INFO("module", "Step 4");
         auto prData = GetRespawnData(player);
         if (prData)
         {
             player->TeleportTo(prData->dungeon.map, prData->dungeon.x, prData->dungeon.y, prData->dungeon.z, prData->dungeon.o);
-            LOG_INFO("module", "Step 4");
+            LOG_INFO("module", "Step 5");
         }
         else
         {
@@ -85,6 +91,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
             auto lfgDungeonEntry = GetLFGDungeon(player->GetMapId(), player->GetDifficulty(player->GetMap()->IsRaid()));
             if (lfgDungeonEntry)
             {
+                LOG_INFO("module", "Step 6");
                 LOG_INFO("module", "Found dungeon {}, {}", lfgDungeonEntry->ID, lfgDungeonEntry->name[0]);
 
                 for (auto dIt = begin(dungeons); dIt != end(dungeons); ++dIt)
@@ -100,6 +107,8 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
                     return false;
                 }
             }
+
+            
 
             AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(player->GetMapId());
             if (at)
