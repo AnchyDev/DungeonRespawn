@@ -163,14 +163,15 @@ void DSPlayerScript::OnMapChanged(Player* player)
     auto prData = GetRespawnData(player);
     if (!prData)
     {
-        prData = new PlayerRespawnData();
-        prData->guid = player->GetGUID();
-        prData->dungeon = *(new DungeonData());
-        prData->dungeon.map = player->GetMapId();
-        prData->dungeon.x = player->GetPositionX();
-        prData->dungeon.y = player->GetPositionY();
-        prData->dungeon.z = player->GetPositionZ();
-        respawnData.push_back(*prData);
+        PlayerRespawnData newPrData;
+        DungeonData newDData;
+        newPrData.guid = player->GetGUID();
+        newPrData.dungeon = newDData;
+        newPrData.dungeon.map = player->GetMapId();
+        newPrData.dungeon.x = player->GetPositionX();
+        newPrData.dungeon.y = player->GetPositionY();
+        newPrData.dungeon.z = player->GetPositionZ();
+        respawnData.push_back(newPrData);
     }
     else
     {
