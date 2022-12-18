@@ -61,6 +61,34 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*
         return true;
     }
 
+    GuidVector::iterator itToRemove;
+    bool canRestore = false;
+
+    for (auto it = playersToTeleport.begin(); it != playersToTeleport.end(); ++it)
+    {
+        if (*it == player->GetGUID())
+        {
+            itToRemove = it;
+            canRestore = true;
+            break;
+        }
+    }
+
+    if (!canRestore)
+    {
+        return true;
+    }
+
+    playersToTeleport.erase(itToRemove);
+
+    auto prData = GetRespawnData(player);
+    if (prData)
+    {
+        player->TeleportTo(prData->dungeon.map, prData->dungeon.x, prData->dungeon.y, prData->dungeon.z, prData->dungeon.o);
+        return false;
+    }
+
+    return true;
     LOG_INFO("module", "Step 2");
 
     for (auto it = playersToTeleport.begin(); it != playersToTeleport.end(); ++it)
