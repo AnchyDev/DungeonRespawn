@@ -139,9 +139,12 @@ PlayerRespawnData* DSPlayerScript::GetRespawnData(Player* player)
 {
     for (auto it = respawnData.begin(); it != respawnData.end(); ++it)
     {
-        if (player->GetGUID() == it->guid)
+        if (it != respawnData.end())
         {
-            return &(*it);
+            if (player->GetGUID() == it->guid)
+            {
+                return &(*it);
+            }
         }
     }
 
