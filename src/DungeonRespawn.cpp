@@ -42,15 +42,25 @@ void DSPlayerScript::ResurrectPlayer(Player* player)
     player->SpawnCorpseBones();
 }
 
-bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
+bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 mapid, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
 {
     if (!drEnabled)
     {
         return true;
     }
 
+    if (!player)
+    {
+        return true;
+    }
+
     if (!IsInsideDungeonRaid(player))
     {
+        if (player->GetMapId() != mapid)
+        {
+            auto prData = GetRespawnData(player);
+            prData->isTeleportingNewMap = true;
+        }
         return true;
     }
 
@@ -112,6 +122,16 @@ PlayerRespawnData* DSPlayerScript::GetRespawnData(Player* player)
     return 0;
 }
 
+void DSPlayerScript::OnUpdateZone(Player* player, uint32 newZone, uint32 newArea)
+{
+    if (!player)
+    {
+        return;
+    }
+
+    LOG_INFO("module", "new {} old {}", newZone, newArea);
+}
+
 void DSPlayerScript::OnMapChanged(Player* player)
 {
     if (!player)
@@ -125,26 +145,46 @@ void DSPlayerScript::OnMapChanged(Player* player)
     }
 
     auto prData = GetRespawnData(player);
+
+    if (!prData->isTeleportingNewMap)
+    {
+        return;
+    }
+
+    prData->dungeon.map = player->GetMapId();
+    prData->dungeon.x = player->GetPositionX();
+    prData->dungeon.y = player->GetPositionY();
+    prData->dungeon.z = player->GetPositionZ();
+    prData->dungeon.o = player->GetOrientation();
+
+    prData->isTeleportingNewMap = false;
+}
+
+void DSPlayerScript::CreateRespawnData(Player* player)
+{
+    auto prData = GetRespawnData(player);
     if (!prData)
     {
         PlayerRespawnData newPrData;
         DungeonData newDData;
         newPrData.guid = player->GetGUID();
         newPrData.dungeon = newDData;
-        newPrData.dungeon.map = player->GetMapId();
-        newPrData.dungeon.x = player->GetPositionX();
-        newPrData.dungeon.y = player->GetPositionY();
-        newPrData.dungeon.z = player->GetPositionZ();
+        newPrData.dungeon.map = 0;
+        newPrData.dungeon.x = 0;
+        newPrData.dungeon.y = 0;
+        newPrData.dungeon.z = 0;
         respawnData.push_back(newPrData);
     }
-    else
+}
+
+void DSPlayerScript::OnLogin(Player* player)
+{
+    if (!player)
     {
-        prData->guid = player->GetGUID();
-        prData->dungeon.map = player->GetMapId();
-        prData->dungeon.x = player->GetPositionX();
-        prData->dungeon.y = player->GetPositionY();
-        prData->dungeon.z = player->GetPositionZ();
+        return;
     }
+
+    CreateRespawnData(player);
 }
 
 void SC_AddDungeonRespawnScripts()
