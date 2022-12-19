@@ -133,16 +133,6 @@ PlayerRespawnData* DSPlayerScript::GetRespawnData(Player* player)
     return 0;
 }
 
-void DSPlayerScript::OnUpdateZone(Player* player, uint32 newZone, uint32 newArea)
-{
-    if (!player)
-    {
-        return;
-    }
-
-    LOG_INFO("module", "new {} old {}", newZone, newArea);
-}
-
 void DSPlayerScript::OnMapChanged(Player* player)
 {
     if (!player)
