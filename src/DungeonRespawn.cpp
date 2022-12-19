@@ -98,7 +98,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 mapid, float /*x*/,
             return true;
         }
 
-        if (prData->dungeon.map != player->GetMapId())
+        if (prData->dungeon.map != int32(player->GetMapId()))
         {
             return true;
         }
