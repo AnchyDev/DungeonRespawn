@@ -10,7 +10,7 @@
 
 struct DungeonData
 {
-    uint32 map;
+    int32 map;
     float x;
     float y;
     float z;
@@ -20,8 +20,8 @@ struct DungeonData
 struct PlayerRespawnData
 {
     ObjectGuid guid;
-    bool isTeleportingNewMap;
     DungeonData dungeon;
+    bool isTeleportingNewMap;
 };
 
 std::vector<PlayerRespawnData> respawnData;
