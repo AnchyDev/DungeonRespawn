@@ -92,6 +92,11 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 mapid, float /*x*/,
     auto prData = GetRespawnData(player);
     if (prData)
     {
+        //Invalid Player Restore data, use default behaviour.
+        if (prData->dungeon.map == 0 && prData->dungeon.x == 0 && prData->dungeon.y == 0 && prData->dungeon.z == 0 && prData->dungeon.o == 0)
+        {
+            return true;
+        }
         player->TeleportTo(prData->dungeon.map, prData->dungeon.x, prData->dungeon.y, prData->dungeon.z, prData->dungeon.o);
         ResurrectPlayer(player);
         return false;
