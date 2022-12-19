@@ -111,7 +111,7 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 mapid, float /*x*/,
     return true;
 }
 
-void DSWorldScript::OnAfterConfigLoad(bool reload)
+void DSWorldScript::OnAfterConfigLoad(bool /*reload*/)
 {
     drEnabled = sConfigMgr->GetOption<bool>("DungeonRespawn.Enable", false);
     respawnHpPct = sConfigMgr->GetOption<float>("DungeonRespawn.RespawnHealthPct", 50.0f);
