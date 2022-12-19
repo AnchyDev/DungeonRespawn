@@ -146,6 +146,11 @@ void DSPlayerScript::OnMapChanged(Player* player)
 
     auto prData = GetRespawnData(player);
 
+    if (!prData)
+    {
+        return;
+    }
+
     if (!prData->isTeleportingNewMap)
     {
         return;
