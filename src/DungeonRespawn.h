@@ -22,6 +22,7 @@ struct PlayerRespawnData
     ObjectGuid guid;
     DungeonData dungeon;
     bool isTeleportingNewMap;
+    bool inDungeon;
 };
 
 std::vector<PlayerRespawnData> respawnData;
@@ -38,7 +39,7 @@ private:
     std::vector<ObjectGuid> playersToTeleport;
     bool IsInsideDungeonRaid(Player* /*player*/);
     void ResurrectPlayer(Player* /*player*/);
-    PlayerRespawnData* GetRespawnData(Player* /*player*/);
+    PlayerRespawnData* GetOrCreateRespawnData(Player* /*player*/);
     void CreateRespawnData(Player* /*player*/);
     void OnPlayerReleasedGhost(Player* /*player*/) override;
     bool OnBeforeTeleport(Player* /*player*/, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/) override;
@@ -53,6 +54,8 @@ public:
 
 private:
     void OnAfterConfigLoad(bool /*reload*/) override;
+    void OnShutdown() override;
+    void SaveRespawnData();
 };
 
 #endif //MODULE_DUNGEONRESPAWN_H
