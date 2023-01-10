@@ -251,7 +251,7 @@ void DSPlayerScript::OnLogin(Player* player)
         return;
     }
 
-    CreateRespawnData(player);
+    GetOrCreateRespawnData(player);
 }
 
 void SC_AddDungeonRespawnScripts()
