@@ -54,13 +54,14 @@ bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 mapid, float /*x*/,
         return true;
     }
 
+    if (player->GetMapId() != mapid)
+    {
+        auto prData = GetOrCreateRespawnData(player);
+        prData->isTeleportingNewMap = true;
+    }
+
     if (!IsInsideDungeonRaid(player))
     {
-        if (player->GetMapId() != mapid)
-        {
-            auto prData = GetOrCreateRespawnData(player);
-            prData->isTeleportingNewMap = true;
-        }
         return true;
     }
 
