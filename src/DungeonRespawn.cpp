@@ -44,6 +44,8 @@ void DSPlayerScript::ResurrectPlayer(Player* player)
 
 bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 mapid, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
 {
+    LOG_INFO("module", "Teleporting player..");
+
     if (!drEnabled)
     {
         return true;
@@ -143,6 +145,8 @@ void DSWorldScript::OnAfterConfigLoad(bool reload)
         dData.z = fields[4].Get<float>();
         dData.o = fields[5].Get<float>();
         prData.dungeon = dData;
+        prData.isTeleportingNewMap = false;
+        prData.inDungeon = false;
 
         respawnData.push_back(prData);
     } while (qResult->NextRow());
@@ -159,8 +163,13 @@ void DSWorldScript::SaveRespawnData()
     {
         if (prData.inDungeon)
         {
-            CharacterDatabase.Execute("REPLACE INTO `dungeonrespawn_playerinfo` (guid, map, x, y, z, o) VALUES ({}, {}, {}, {}, {}, {})",
+            CharacterDatabase.Execute("INSERT INTO `dungeonrespawn_playerinfo` (guid, map, x, y, z, o) VALUES ({}, {}, {}, {}, {}, {}) ON DUPLICATE KEY UPDATE map={}, x={}, y={}, z={}, o={}",
                 prData.guid.GetRawValue(),
+                prData.dungeon.map,
+                prData.dungeon.x,
+                prData.dungeon.y,
+                prData.dungeon.z,
+                prData.dungeon.o,
                 prData.dungeon.map,
                 prData.dungeon.x,
                 prData.dungeon.y,
@@ -188,6 +197,7 @@ PlayerRespawnData* DSPlayerScript::GetOrCreateRespawnData(Player* player)
     }
 
     CreateRespawnData(player);
+    LOG_INFO("module", "Found no data, creating new..");
 
     return GetOrCreateRespawnData(player);
 }
@@ -219,6 +229,8 @@ void DSPlayerScript::OnMapChanged(Player* player)
         return;
     }
 
+    LOG_INFO("module", "Is teleporting new map changed.");
+
     prData->dungeon.map = player->GetMapId();
     prData->dungeon.x = player->GetPositionX();
     prData->dungeon.y = player->GetPositionY();
@@ -230,17 +242,19 @@ void DSPlayerScript::OnMapChanged(Player* player)
 
 void DSPlayerScript::CreateRespawnData(Player* player)
 {
-    DungeonData newDData =
-    {
-        -1, //Map
-        0, 0, 0, 0 //X,Y,Z,O
-    };
-    PlayerRespawnData newPrData =
-    {
-        player->GetGUID(), //PlayerGuid
-        newDData, //DungeonData
-        false //IsTeleportingNewMap
-    };
+    DungeonData newDData;
+    newDData.map = -1;
+    newDData.x = 0;
+    newDData.y = 0;
+    newDData.z = 0;
+    newDData.o = 0;
+
+    PlayerRespawnData newPrData;
+    newPrData.dungeon = newDData;
+    newPrData.guid = player->GetGUID();
+    newPrData.isTeleportingNewMap = false;
+    newPrData.inDungeon = false;
+    
     respawnData.push_back(newPrData);
 }
 
