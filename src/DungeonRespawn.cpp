@@ -44,8 +44,6 @@ void DSPlayerScript::ResurrectPlayer(Player* player)
 
 bool DSPlayerScript::OnBeforeTeleport(Player* player, uint32 mapid, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/)
 {
-    LOG_INFO("module", "Teleporting player..");
-
     if (!drEnabled)
     {
         return true;
@@ -197,7 +195,6 @@ PlayerRespawnData* DSPlayerScript::GetOrCreateRespawnData(Player* player)
     }
 
     CreateRespawnData(player);
-    LOG_INFO("module", "Found no data, creating new..");
 
     return GetOrCreateRespawnData(player);
 }
@@ -228,8 +225,6 @@ void DSPlayerScript::OnMapChanged(Player* player)
     {
         return;
     }
-
-    LOG_INFO("module", "Is teleporting new map changed.");
 
     prData->dungeon.map = player->GetMapId();
     prData->dungeon.x = player->GetPositionX();
