@@ -125,30 +125,38 @@ void DSWorldScript::OnAfterConfigLoad(bool reload)
 
     QueryResult qResult = CharacterDatabase.Query("SELECT `guid`, `map`, `x`, `y`, `z`, `o` FROM `dungeonrespawn_playerinfo`");
 
-    if (!qResult)
+    if (qResult)
     {
-        LOG_INFO("module", "Failed to load DungeonRespawn player respawn info from 'dungeonrespawn_playerinfo' table.");
+        uint32 dataCount = 0;
+
+        do
+        {
+            Field* fields = qResult->Fetch();
+
+            PlayerRespawnData prData;
+            DungeonData dData;
+            prData.guid = ObjectGuid(fields[0].Get<uint64>());
+            dData.map = fields[1].Get<int32>();
+            dData.x = fields[2].Get<float>();
+            dData.y = fields[3].Get<float>();
+            dData.z = fields[4].Get<float>();
+            dData.o = fields[5].Get<float>();
+            prData.dungeon = dData;
+            prData.isTeleportingNewMap = false;
+            prData.inDungeon = false;
+
+            respawnData.push_back(prData);
+
+            dataCount++;
+        } while (qResult->NextRow());
+
+        LOG_INFO("module", "Loaded '{}' rows from 'dungeonrespawn_playerinfo' table.", dataCount);
+    }
+    else
+    {
+        LOG_INFO("module", "Loaded '0' rows from 'dungeonrespawn_playerinfo' table.");
         return;
     }
-
-    do
-    {
-        Field* fields = qResult->Fetch();
-
-        PlayerRespawnData prData;
-        DungeonData dData;
-        prData.guid = ObjectGuid(fields[0].Get<uint64>());
-        dData.map = fields[1].Get<int32>();
-        dData.x = fields[2].Get<float>();
-        dData.y = fields[3].Get<float>();
-        dData.z = fields[4].Get<float>();
-        dData.o = fields[5].Get<float>();
-        prData.dungeon = dData;
-        prData.isTeleportingNewMap = false;
-        prData.inDungeon = false;
-
-        respawnData.push_back(prData);
-    } while (qResult->NextRow());
 }
 
 void DSWorldScript::OnShutdown()
