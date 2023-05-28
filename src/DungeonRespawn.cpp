@@ -18,7 +18,6 @@ bool DSPlayerScript::IsInsideDungeonRaid(Player* player)
         return false;
     }
 
-
     return true;
 }
 void DSPlayerScript::OnPlayerReleasedGhost(Player* player)
@@ -270,6 +269,22 @@ void DSPlayerScript::OnLogin(Player* player)
     }
 
     GetOrCreateRespawnData(player);
+}
+
+void DSPlayerScript::OnLogout(Player* player)
+{
+    if (!player)
+    {
+        return;
+    }
+
+    for (auto it = playersToTeleport.begin(); it < playersToTeleport.end(); ++it)
+    {
+        if (player->GetGUID() == (*it))
+        {
+            playersToTeleport.erase(it);
+        }
+    }
 }
 
 void SC_AddDungeonRespawnScripts()

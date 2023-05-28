@@ -45,6 +45,7 @@ private:
     bool OnBeforeTeleport(Player* /*player*/, uint32 /*mapid*/, float /*x*/, float /*y*/, float /*z*/, float /*orientation*/, uint32 /*options*/, Unit* /*target*/) override;
     void OnMapChanged(Player* /*player*/) override;
     void OnLogin(Player* /*player*/) override;
+    void OnLogout(Player* /*player*/) override;
 };
 
 class DSWorldScript : public WorldScript
